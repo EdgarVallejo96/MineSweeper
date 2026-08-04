@@ -137,7 +137,8 @@ export class GameService {
   }
 
   /**
-   * Handles user clicks to reveal a cell.
+   * Handles user clicks to reveal a cell. Clicking an already-revealed numbered
+   * cell instead attempts a "chord" reveal of its unflagged neighbors.
    */
   revealCell(x: number, y: number) {
     const state = this.gameState$.getValue();
@@ -147,8 +148,17 @@ export class GameService {
     const board = this.board$.getValue();
     const cell = board[y][x];
 
-    // Do nothing if cell is already revealed or flagged by the user
-    if (cell.isRevealed || cell.isFlagged) return;
+    if (cell.isRevealed) {
+      // Chording only makes sense on numbered cells
+      if (cell.neighborMines > 0) {
+        this.chordReveal(board, x, y);
+        this.board$.next(board.map(row => row.map(c => ({ ...c }))));
+      }
+      return;
+    }
+
+    // Do nothing if cell is flagged by the user
+    if (cell.isFlagged) return;
 
     // On the very first click, we generate the mines ensuring the player doesn't lose instantly
     if (this.isFirstClick) {
@@ -158,26 +168,74 @@ export class GameService {
       this.startTimer();
     }
 
-    if (cell.isMine) {
-      // Player clicked a mine, end the game
-      this.gameState$.next('lost');
-      this.stopTimer();
-      this.revealAllMines(board);
-    } else {
-      // Reveal the clicked cell
-      cell.isRevealed = true;
-
-      // If the cell is blank (no mine, no number), reveal all connected blank neighbors
-      if (cell.neighborMines === 0) {
-        this.revealNeighborCells(board, x, y);
-      }
-
-      // Check if this move won the game
+    this.revealSingleCell(board, x, y);
+    if (this.gameState$.getValue() !== 'lost') {
       this.checkWinCondition(board);
     }
 
     // Broadcast the updated board state as new cell objects so Angular detects the change
     this.board$.next(board.map(row => row.map(cell => ({ ...cell }))));
+  }
+
+  /**
+   * Reveals a single cell: ends the game if it's a mine, otherwise marks it
+   * revealed and cascades through connected blank neighbors.
+   */
+  private revealSingleCell(board: Cell[][], x: number, y: number) {
+    const cell = board[y][x];
+
+    if (cell.isMine) {
+      // Player revealed a mine, end the game
+      this.gameState$.next('lost');
+      this.stopTimer();
+      this.revealAllMines(board);
+      return;
+    }
+
+    cell.isRevealed = true;
+
+    // If the cell is blank (no mine, no number), reveal all connected blank neighbors
+    if (cell.neighborMines === 0) {
+      this.revealNeighborCells(board, x, y);
+    }
+  }
+
+  /**
+   * Chords a revealed numbered cell: if the number of flagged neighbors matches
+   * the cell's number, reveals all remaining unflagged neighbors at once.
+   * If a flag was misplaced, this can reveal a mine and lose the game.
+   */
+  private chordReveal(board: Cell[][], x: number, y: number) {
+    const diff = this.difficulty$.getValue();
+    const cell = board[y][x];
+
+    const neighbors: { x: number, y: number }[] = [];
+    let flaggedCount = 0;
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        if (dx === 0 && dy === 0) continue;
+        const nx = x + dx;
+        const ny = y + dy;
+        if (ny < 0 || ny >= diff.rows || nx < 0 || nx >= diff.cols) continue;
+
+        const neighbor = board[ny][nx];
+        if (neighbor.isFlagged) flaggedCount++;
+        neighbors.push({ x: nx, y: ny });
+      }
+    }
+
+    // Only reveal if the surrounding flags match the cell's number
+    if (flaggedCount !== cell.neighborMines) return;
+
+    for (const n of neighbors) {
+      const neighbor = board[n.y][n.x];
+      if (neighbor.isRevealed || neighbor.isFlagged) continue;
+
+      this.revealSingleCell(board, n.x, n.y);
+      if (this.gameState$.getValue() === 'lost') return;
+    }
+
+    this.checkWinCondition(board);
   }
 
   /**
