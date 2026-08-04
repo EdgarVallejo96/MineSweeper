@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --bg-color: #21252b;
+  --text-color: #abb2bf;
+  --primary-color: #61afef;
+  --board-bg: #282c34;
+  --cell-bg: #3a3f47;
+  --cell-hover-bg: #4a5059;
+  --cell-revealed-bg: #21252b;
+  --mine-bg: #e06c75;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}

@@ -1,0 +1,22 @@
+<!-- Only render the board once the difficulty config is loaded from the observable -->
+<div class="board-container" *ngIf="difficulty$ | async as difficulty">
+  <!-- 
+    The main game grid. 
+    Dynamic inline styles are used to set the grid columns and overall dimensions based on the difficulty.
+  -->
+  <div class="board" 
+       [style.grid-template-columns]="'repeat(' + difficulty.cols + ', 1fr)'"
+       [style.width.px]="difficulty.cols * 30"
+       [style.height.px]="difficulty.rows * 30">
+       
+    <!-- Loop through each row of the board state observable -->
+    <ng-container *ngFor="let row of board$ | async; let y = index">
+      <!-- Loop through each cell in the current row -->
+      <app-cell *ngFor="let cell of row; let x = index"
+                [cell]="cell"
+                (cellClick)="onCellClick(x, y)"
+                (cellRightClick)="onCellRightClick(x, y)">
+      </app-cell>
+    </ng-container>
+  </div>
+</div>

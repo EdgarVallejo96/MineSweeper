@@ -1,0 +1,30 @@
+<header class="header">
+  <!-- Difficulty selection dropdown -->
+  <div class="controls">
+    <select [ngModel]="selectedDifficulty" 
+            (ngModelChange)="onDifficultyChange($event)"
+            class="difficulty-select">
+      <!-- Iterate through predefined difficulty options -->
+      <option *ngFor="let diff of difficulties" [value]="diff.value">
+        {{ diff.label }}
+      </option>
+    </select>
+  </div>
+
+  <div class="scoreboard">
+    <!-- LCD-style counter for remaining mines (total mines minus placed flags) -->
+    <div class="counter mines-left">
+      {{ formatNumber((minesRemaining$ | async) || 0) }}
+    </div>
+    
+    <!-- Central reset button. Icon changes based on win/loss/playing state -->
+    <button class="reset-btn" (click)="resetGame()">
+      {{ getFaceIcon((gameState$ | async) || 'idle') }}
+    </button>
+    
+    <!-- LCD-style counter for elapsed seconds -->
+    <div class="counter timer">
+      {{ formatNumber((timer$ | async) || 0) }}
+    </div>
+  </div>
+</header>

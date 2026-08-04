@@ -1,0 +1,70 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+
+  .controls {
+    .difficulty-select {
+      background: var(--input-bg, #2c313a);
+      color: var(--text-color, #abb2bf);
+      border: 1px solid #1e2227;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      outline: none;
+      
+      &:focus {
+        border-color: #61afef;
+      }
+    }
+  }
+
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    background: var(--board-bg, #2c313a);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+    .counter {
+      background: #1e2227;
+      color: #e06c75;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.8rem;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 4px;
+      min-width: 60px;
+      text-align: center;
+      box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .reset-btn {
+      background: #abb2bf;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 2px 2px 5px rgba(255,255,255,0.4), 1px 1px 3px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+
+      &:active {
+        transform: scale(0.95);
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
+      }
+    }
+  }
+}

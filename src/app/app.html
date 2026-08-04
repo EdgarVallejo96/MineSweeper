@@ -1,0 +1,14 @@
+<!-- Main container for the entire Minesweeper game -->
+<div class="game-container">
+  <!-- Dynamic title bound to the component's title property -->
+  <h1>{{ title }}</h1>
+  
+  <!-- Panel containing the game UI elements -->
+  <div class="game-panel">
+    <!-- Top header with timer, reset face, and mine counter -->
+    <app-header></app-header>
+    
+    <!-- The actual interactive game grid -->
+    <app-board></app-board>
+  </div>
+</div>

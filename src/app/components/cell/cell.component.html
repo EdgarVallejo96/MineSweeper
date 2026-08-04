@@ -1,0 +1,29 @@
+<!-- 
+  Interactive cell block.
+  Dynamic classes apply CSS styles for revealed, mine, and flagged states.
+-->
+<div class="cell" 
+     [class.revealed]="cell.isRevealed"
+     [class.mine]="cell.isRevealed && cell.isMine"
+     [class.flagged]="cell.isFlagged"
+     (click)="onClick()"
+     (contextmenu)="onRightClick($event)">
+     
+  <!-- Show number of adjacent mines if the cell is revealed, safe, and has neighboring mines -->
+  <ng-container *ngIf="cell.isRevealed && !cell.isMine && cell.neighborMines > 0">
+    <!-- Specific CSS class is applied based on the number to color it appropriately -->
+    <span class="number count-{{cell.neighborMines}}">
+      {{ cell.neighborMines }}
+    </span>
+  </ng-container>
+  
+  <!-- Show a bomb emoji if the cell is revealed and is a mine -->
+  <ng-container *ngIf="cell.isRevealed && cell.isMine">
+    💣
+  </ng-container>
+  
+  <!-- Show a flag emoji if the cell is NOT revealed and the user has flagged it -->
+  <ng-container *ngIf="!cell.isRevealed && cell.isFlagged">
+    🚩
+  </ng-container>
+</div>
