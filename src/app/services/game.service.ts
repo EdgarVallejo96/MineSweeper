@@ -109,7 +109,6 @@ export class GameService {
 
     // Pre-calculate the number of adjacent mines for each non-mine cell
     this.calculateNeighbors(board, diff.cols, diff.rows);
-    this.board$.next(board);
   }
 
   /**
@@ -177,8 +176,8 @@ export class GameService {
       this.checkWinCondition(board);
     }
 
-    // Broadcast the updated board state
-    this.board$.next(board);
+    // Broadcast the updated board state as new cell objects so Angular detects the change
+    this.board$.next(board.map(row => row.map(cell => ({ ...cell }))));
   }
 
   /**
@@ -205,7 +204,7 @@ export class GameService {
       this.flagsCount$.next(currentFlags - 1);
     }
 
-    this.board$.next(board);
+    this.board$.next(board.map(row => row.map(cell => ({ ...cell }))));
   }
 
   /**
