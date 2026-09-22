@@ -16,5 +16,5 @@ import { CommonModule } from '@angular/common';
 })
 export class App {
   /** The title of the application */
-  title = 'Minesweeper Angular';
+  title = 'Minesweeper';
 }
