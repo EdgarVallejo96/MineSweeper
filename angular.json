@@ -48,6 +48,14 @@
               ],
               "outputHashing": "all"
             },
+            "pages": {
+              "outputPath": {
+                "base": "docs",
+                "browser": ""
+              },
+              "baseHref": "/MineSweeper/",
+              "outputHashing": "all"
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
