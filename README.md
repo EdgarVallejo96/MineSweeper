@@ -53,8 +53,24 @@ src/app/
 | --- | --- |
 | `npm start` | Runs `ng serve` for a local dev server |
 | `npm run build` | Builds the project for production into `dist/` |
+| `npm run build:pages` | Builds the project for GitHub Pages into `docs/` |
 | `npm run watch` | Builds in watch mode with the development configuration |
 | `npm test` | Runs unit tests via [Vitest](https://vitest.dev/) |
+
+## Deploying to GitHub Pages
+
+Build the project into the `docs/` directory:
+
+```bash
+npm run build:pages
+```
+
+This runs `ng build --configuration pages`, which is defined in [angular.json](angular.json):
+
+- Output goes directly to `docs/` (not `docs/browser/`).
+- `baseHref` is set to `/MineSweeper/` to match the repository name.
+
+Then commit and push the `docs/` folder, and in the GitHub repository go to **Settings → Pages** and set the source to **Deploy from a branch**, with branch `main` and folder `/docs`.
 
 ## How to Play
 
