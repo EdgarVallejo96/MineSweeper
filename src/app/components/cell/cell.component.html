@@ -6,6 +6,7 @@
      [class.revealed]="cell.isRevealed"
      [class.mine]="cell.isRevealed && cell.isMine"
      [class.flagged]="cell.isFlagged"
+     [class.tilted]="cell.isTilted"
      (click)="onClick()"
      (contextmenu)="onRightClick($event)">
      

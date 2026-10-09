@@ -12,6 +12,8 @@ export interface Cell {
   isRevealed: boolean;
   /** Whether the user has flagged this cell as a suspected mine */
   isFlagged: boolean;
+  /** Transient flag: cell is briefly tilting to hint it still needs checking */
+  isTilted?: boolean;
   /** The number of adjacent mines (0-8) */
   neighborMines: number;
 }

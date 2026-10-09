@@ -14,6 +14,7 @@ export class GameService {
   private flagsCount$ = new BehaviorSubject<number>(0);
   private timer$ = new BehaviorSubject<number>(0);
   private timerSub?: Subscription;
+  private tiltTimeout?: ReturnType<typeof setTimeout>;
 
   // Expose state as observables for components to subscribe to without being able to modify them directly
   public board = this.board$.asObservable();
@@ -224,8 +225,12 @@ export class GameService {
       }
     }
 
-    // Only reveal if the surrounding flags match the cell's number
-    if (flaggedCount !== cell.neighborMines) return;
+    // If the flags don't match the cell's number yet, tilt the unresolved
+    // neighbors as a hint that they still need to be checked
+    if (flaggedCount !== cell.neighborMines) {
+      this.tiltCells(board, neighbors.filter(n => !board[n.y][n.x].isRevealed && !board[n.y][n.x].isFlagged));
+      return;
+    }
 
     for (const n of neighbors) {
       const neighbor = board[n.y][n.x];
@@ -236,6 +241,21 @@ export class GameService {
     }
 
     this.checkWinCondition(board);
+  }
+
+  /**
+   * Briefly tilts the given cells, then clears the tilt so it can be re-triggered.
+   */
+  private tiltCells(board: Cell[][], cells: { x: number, y: number }[]) {
+    if (cells.length === 0) return;
+    for (const c of cells) board[c.y][c.x].isTilted = true;
+
+    clearTimeout(this.tiltTimeout);
+    this.tiltTimeout = setTimeout(() => {
+      const current = this.board$.getValue();
+      for (const row of current) for (const c of row) c.isTilted = false;
+      this.board$.next(current.map(row => row.map(c => ({ ...c }))));
+    }, 400);
   }
 
   /**
