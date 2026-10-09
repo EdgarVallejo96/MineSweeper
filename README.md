@@ -1,59 +1,69 @@
 # Minesweeper
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.8.
+A classic Minesweeper game built with [Angular](https://angular.dev) (v22), featuring the familiar grid-reveal gameplay, flagging, a mine counter, a timer, and multiple difficulty levels.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- 🧨 Classic left-click to reveal, right-click to flag gameplay
+- 🚩 Live mine counter that tracks remaining unflagged mines
+- ⏱️ Game timer
+- 🙂 Reset button with a face that reacts to the game state (playing / won / lost)
+- 🎚️ Selectable difficulty levels: **Beginner**, **Intermediate**, and **Expert**
+- ⚡ Chording — clicking a revealed numbered cell reveals its neighbors when the correct number of surrounding flags are placed
+- 🧩 Built with standalone Angular components (`Header`, `Board`, `Cell`) and a central `GameService` managing state via RxJS observables
 
-```bash
-ng serve
-```
+## Prerequisites
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- [Node.js](https://nodejs.org/) (LTS recommended)
+- npm `11.13.0` or later (this project pins its package manager via `packageManager` in [package.json](package.json))
 
-## Code scaffolding
+## Getting Started
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+Install dependencies:
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Start the local development server:
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Then open your browser and navigate to `http://localhost:4200/`. The app will automatically reload whenever you modify a source file.
 
-For end-to-end (e2e) testing, run:
+## Project Structure
 
-```bash
-ng e2e
+```
+src/app/
+├── components/
+│   ├── header/   # Top bar: mine counter, reset face, timer, difficulty select
+│   ├── board/    # Renders the grid and delegates cell interactions
+│   └── cell/     # A single interactive board cell
+├── services/
+│   └── game.service.ts   # Core game logic and state (board, timer, flags, difficulty)
+├── models/                # Cell and game data models
+├── app.ts / app.html      # Root component wiring Header + Board together
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Available Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm start` | Runs `ng serve` for a local dev server |
+| `npm run build` | Builds the project for production into `dist/` |
+| `npm run watch` | Builds in watch mode with the development configuration |
+| `npm test` | Runs unit tests via [Vitest](https://vitest.dev/) |
+
+## How to Play
+
+1. Left-click a cell to reveal it.
+2. Right-click a cell to flag/unflag it as a suspected mine.
+3. Numbers indicate how many mines are adjacent to that cell.
+4. Left-click a revealed number when it has the matching number of flagged neighbors to auto-reveal the rest of its neighbors.
+5. Reveal all non-mine cells to win — click a mine and it's game over!
 
 ## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+For more information on the underlying tooling, see the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli).
